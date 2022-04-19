@@ -1,0 +1,3 @@
+🙂 Created account "alice" with address "cosmos1q34cwkfk2583a4z27kna03hqyp74alkl93xlsm" with mnemonic: "force polar crush panic change globe buffalo sign gentle review rebuild better piece dignity lonely lottery unusual tool regular solar train afford damage orbit"
+🙂 Created account "bob" with address "cosmos1cll2k29z67va02vcpv4cd05pupthd89gummvm3" with mnemonic: "ill vacuum ticket bread switch this exhibit east much beyond salute second swift jewel system usual couple adult tray forward perfect cloud develop physical"
+
