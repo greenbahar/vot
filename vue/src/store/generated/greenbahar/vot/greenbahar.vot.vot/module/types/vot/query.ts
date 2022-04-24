@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../vot/params";
+import { NextVote } from "../vot/next_vote";
 
 export const protobufPackage = "greenbahar.vot.vot";
 
@@ -11,6 +12,12 @@ export interface QueryParamsRequest {}
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
   params: Params | undefined;
+}
+
+export interface QueryGetNextVoteRequest {}
+
+export interface QueryGetNextVoteResponse {
+  NextVote: NextVote | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -110,10 +117,130 @@ export const QueryParamsResponse = {
   },
 };
 
+const baseQueryGetNextVoteRequest: object = {};
+
+export const QueryGetNextVoteRequest = {
+  encode(_: QueryGetNextVoteRequest, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetNextVoteRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetNextVoteRequest,
+    } as QueryGetNextVoteRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetNextVoteRequest {
+    const message = {
+      ...baseQueryGetNextVoteRequest,
+    } as QueryGetNextVoteRequest;
+    return message;
+  },
+
+  toJSON(_: QueryGetNextVoteRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryGetNextVoteRequest>
+  ): QueryGetNextVoteRequest {
+    const message = {
+      ...baseQueryGetNextVoteRequest,
+    } as QueryGetNextVoteRequest;
+    return message;
+  },
+};
+
+const baseQueryGetNextVoteResponse: object = {};
+
+export const QueryGetNextVoteResponse = {
+  encode(
+    message: QueryGetNextVoteResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.NextVote !== undefined) {
+      NextVote.encode(message.NextVote, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetNextVoteResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetNextVoteResponse,
+    } as QueryGetNextVoteResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.NextVote = NextVote.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetNextVoteResponse {
+    const message = {
+      ...baseQueryGetNextVoteResponse,
+    } as QueryGetNextVoteResponse;
+    if (object.NextVote !== undefined && object.NextVote !== null) {
+      message.NextVote = NextVote.fromJSON(object.NextVote);
+    } else {
+      message.NextVote = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetNextVoteResponse): unknown {
+    const obj: any = {};
+    message.NextVote !== undefined &&
+      (obj.NextVote = message.NextVote
+        ? NextVote.toJSON(message.NextVote)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetNextVoteResponse>
+  ): QueryGetNextVoteResponse {
+    const message = {
+      ...baseQueryGetNextVoteResponse,
+    } as QueryGetNextVoteResponse;
+    if (object.NextVote !== undefined && object.NextVote !== null) {
+      message.NextVote = NextVote.fromPartial(object.NextVote);
+    } else {
+      message.NextVote = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a NextVote by index. */
+  NextVote(request: QueryGetNextVoteRequest): Promise<QueryGetNextVoteResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -129,6 +256,20 @@ export class QueryClientImpl implements Query {
       data
     );
     return promise.then((data) => QueryParamsResponse.decode(new Reader(data)));
+  }
+
+  NextVote(
+    request: QueryGetNextVoteRequest
+  ): Promise<QueryGetNextVoteResponse> {
+    const data = QueryGetNextVoteRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "greenbahar.vot.vot.Query",
+      "NextVote",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetNextVoteResponse.decode(new Reader(data))
+    );
   }
 }
 

@@ -2,7 +2,8 @@ syntax = "proto3";
 package greenbahar.vot.vot;
 
 import "gogoproto/gogo.proto";
-import "vot/params.proto";
+import "github.com/greenbahar/vot/proto/vot/params.proto";
+import "github.com/greenbahar/vot/proto/vot/next_vote.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/greenbahar/vot/x/vot/types";
@@ -10,5 +11,6 @@ option go_package = "github.com/greenbahar/vot/x/vot/types";
 // GenesisState defines the vot module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
+  NextVote nextVote = 2;
   // this line is used by starport scaffolding # genesis/proto/state
 }

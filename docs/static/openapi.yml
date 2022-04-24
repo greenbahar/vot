@@ -17927,6 +17927,42 @@ paths:
           format: int64
       tags:
         - Query
+  /greenbahar/vot/vot/next_vote:
+    get:
+      summary: Queries a NextVote by index.
+      operationId: GreenbaharVotVotNextVote
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              NextVote:
+                type: object
+                properties:
+                  idValue:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /greenbahar/vot/vot/params:
     get:
       summary: Parameters queries the parameters of the module.
@@ -42739,9 +42775,24 @@ definitions:
     description: >-
       MsgCreateVestingAccountResponse defines the Msg/CreateVestingAccount
       response type.
+  greenbahar.vot.vot.NextVote:
+    type: object
+    properties:
+      idValue:
+        type: string
+        format: uint64
   greenbahar.vot.vot.Params:
     type: object
     description: Params defines the parameters for the module.
+  greenbahar.vot.vot.QueryGetNextVoteResponse:
+    type: object
+    properties:
+      NextVote:
+        type: object
+        properties:
+          idValue:
+            type: string
+            format: uint64
   greenbahar.vot.vot.QueryParamsResponse:
     type: object
     properties:

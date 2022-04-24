@@ -20,10 +20,19 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
+export interface VotNextVote {
+  /** @format uint64 */
+  idValue?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
 export type VotParams = object;
+
+export interface VotQueryGetNextVoteResponse {
+  NextVote?: VotNextVote;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
@@ -229,6 +238,22 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNextVote
+   * @summary Queries a NextVote by index.
+   * @request GET:/greenbahar/vot/vot/next_vote
+   */
+  queryNextVote = (params: RequestParams = {}) =>
+    this.request<VotQueryGetNextVoteResponse, RpcStatus>({
+      path: `/greenbahar/vot/vot/next_vote`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

@@ -9,17 +9,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CmdQueryParams() *cobra.Command {
+func CmdShowNextVote() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "params",
-		Short: "shows the parameters of the module",
+		Use:   "show-next-vote",
+		Short: "shows nextVote",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
+			params := &types.QueryGetNextVoteRequest{}
+
+			res, err := queryClient.NextVote(context.Background(), params)
 			if err != nil {
 				return err
 			}

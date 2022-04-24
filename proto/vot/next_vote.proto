@@ -1,0 +1,9 @@
+syntax = "proto3";
+package greenbahar.vot.vot;
+
+option go_package = "github.com/greenbahar/vot/x/vot/types";
+
+message NextVote {
+  uint64 idValue = 1; 
+  
+}
