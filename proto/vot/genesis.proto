@@ -2,8 +2,8 @@ syntax = "proto3";
 package greenbahar.vot.vot;
 
 import "gogoproto/gogo.proto";
-import "github.com/greenbahar/vot/proto/vot/params.proto";
-import "github.com/greenbahar/vot/proto/vot/next_vote.proto";
+import "vot/params.proto";
+import "vot/next_vote.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/greenbahar/vot/x/vot/types";

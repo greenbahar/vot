@@ -4,8 +4,8 @@ package greenbahar.vot.vot;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "github.com/greenbahar/vot/proto/vot/params.proto";
-import "github.com/greenbahar/vot/proto/vot/next_vote.proto";
+import "vot/params.proto";
+import "vot/next_vote.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/greenbahar/vot/x/vot/types";
