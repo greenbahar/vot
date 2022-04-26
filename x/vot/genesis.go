@@ -13,6 +13,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.NextVote != nil {
 		k.SetNextVote(ctx, *genState.NextVote)
 	}
+	// Set all the storedVote
+	for _, elem := range genState.StoredVoteList {
+		k.SetStoredVote(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -27,6 +31,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	if found {
 		genesis.NextVote = &nextVote
 	}
+	genesis.StoredVoteList = k.GetAllStoredVote(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

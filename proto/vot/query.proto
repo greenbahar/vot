@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "vot/params.proto";
 import "vot/next_vote.proto";
+import "vot/stored_vote.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/greenbahar/vot/x/vot/types";
@@ -20,6 +21,16 @@ service Query {
 	rpc NextVote(QueryGetNextVoteRequest) returns (QueryGetNextVoteResponse) {
 		option (google.api.http).get = "/greenbahar/vot/vot/next_vote";
 	}
+// Queries a StoredVote by index.
+	rpc StoredVote(QueryGetStoredVoteRequest) returns (QueryGetStoredVoteResponse) {
+		option (google.api.http).get = "/greenbahar/vot/vot/stored_vote/{index}";
+	}
+
+	// Queries a list of StoredVote items.
+	rpc StoredVoteAll(QueryAllStoredVoteRequest) returns (QueryAllStoredVoteResponse) {
+		option (google.api.http).get = "/greenbahar/vot/vot/stored_vote";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -37,4 +48,22 @@ message QueryGetNextVoteRequest {}
 message QueryGetNextVoteResponse {
 	NextVote NextVote = 1 [(gogoproto.nullable) = false];
 }
+message QueryGetStoredVoteRequest {
+	  string index = 1;
+
+}
+
+message QueryGetStoredVoteResponse {
+	StoredVote storedVote = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllStoredVoteRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoredVoteResponse {
+	repeated StoredVote storedVote = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 // this line is used by starport scaffolding # 3

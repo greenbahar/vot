@@ -2,9 +2,10 @@ import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { NextVote } from "./module/types/vot/next_vote"
 import { Params } from "./module/types/vot/params"
+import { StoredVote } from "./module/types/vot/stored_vote"
 
 
-export { NextVote, Params };
+export { NextVote, Params, StoredVote };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -44,10 +45,13 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				NextVote: {},
+				StoredVote: {},
+				StoredVoteAll: {},
 				
 				_Structure: {
 						NextVote: getStructure(NextVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						StoredVote: getStructure(StoredVote.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.NextVote[JSON.stringify(params)] ?? {}
+		},
+				getStoredVote: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredVote[JSON.stringify(params)] ?? {}
+		},
+				getStoredVoteAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredVoteAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -161,6 +177,54 @@ export default {
 				return getters['getNextVote']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryNextVote API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredVote({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryStoredVote( key.index)).data
+				
+					
+				commit('QUERY', { query: 'StoredVote', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredVote', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredVote']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredVote API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredVoteAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryStoredVoteAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryStoredVoteAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'StoredVoteAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredVoteAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredVoteAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredVoteAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

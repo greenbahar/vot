@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Params } from "../vot/params";
 import { NextVote } from "../vot/next_vote";
+import { StoredVote } from "../vot/stored_vote";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "greenbahar.vot.vot";
@@ -8,8 +9,9 @@ export const protobufPackage = "greenbahar.vot.vot";
 /** GenesisState defines the vot module's genesis state. */
 export interface GenesisState {
   params: Params | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
   nextVote: NextVote | undefined;
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  storedVoteList: StoredVote[];
 }
 
 const baseGenesisState: object = {};
@@ -22,6 +24,9 @@ export const GenesisState = {
     if (message.nextVote !== undefined) {
       NextVote.encode(message.nextVote, writer.uint32(18).fork()).ldelim();
     }
+    for (const v of message.storedVoteList) {
+      StoredVote.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -29,6 +34,7 @@ export const GenesisState = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGenesisState } as GenesisState;
+    message.storedVoteList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37,6 +43,11 @@ export const GenesisState = {
           break;
         case 2:
           message.nextVote = NextVote.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.storedVoteList.push(
+            StoredVote.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -48,6 +59,7 @@ export const GenesisState = {
 
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
+    message.storedVoteList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -57,6 +69,11 @@ export const GenesisState = {
       message.nextVote = NextVote.fromJSON(object.nextVote);
     } else {
       message.nextVote = undefined;
+    }
+    if (object.storedVoteList !== undefined && object.storedVoteList !== null) {
+      for (const e of object.storedVoteList) {
+        message.storedVoteList.push(StoredVote.fromJSON(e));
+      }
     }
     return message;
   },
@@ -69,11 +86,19 @@ export const GenesisState = {
       (obj.nextVote = message.nextVote
         ? NextVote.toJSON(message.nextVote)
         : undefined);
+    if (message.storedVoteList) {
+      obj.storedVoteList = message.storedVoteList.map((e) =>
+        e ? StoredVote.toJSON(e) : undefined
+      );
+    } else {
+      obj.storedVoteList = [];
+    }
     return obj;
   },
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
+    message.storedVoteList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -83,6 +108,11 @@ export const GenesisState = {
       message.nextVote = NextVote.fromPartial(object.nextVote);
     } else {
       message.nextVote = undefined;
+    }
+    if (object.storedVoteList !== undefined && object.storedVoteList !== null) {
+      for (const e of object.storedVoteList) {
+        message.storedVoteList.push(StoredVote.fromPartial(e));
+      }
     }
     return message;
   },

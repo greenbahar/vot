@@ -4,6 +4,7 @@ package greenbahar.vot.vot;
 import "gogoproto/gogo.proto";
 import "vot/params.proto";
 import "vot/next_vote.proto";
+import "vot/stored_vote.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/greenbahar/vot/x/vot/types";
@@ -12,5 +13,6 @@ option go_package = "github.com/greenbahar/vot/x/vot/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   NextVote nextVote = 2;
+  repeated StoredVote storedVoteList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
