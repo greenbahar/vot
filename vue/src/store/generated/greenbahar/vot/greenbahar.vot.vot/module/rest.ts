@@ -83,6 +83,10 @@ export interface V1Beta1PageResponse {
   total?: string;
 }
 
+export interface VotMsgCreateVoteResponse {
+  idValue?: string;
+}
+
 export interface VotNextVote {
   /** @format uint64 */
   idValue?: string;

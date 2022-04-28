@@ -42940,6 +42940,11 @@ definitions:
     description: >-
       MsgCreateVestingAccountResponse defines the Msg/CreateVestingAccount
       response type.
+  greenbahar.vot.vot.MsgCreateVoteResponse:
+    type: object
+    properties:
+      idValue:
+        type: string
   greenbahar.vot.vot.NextVote:
     type: object
     properties:
