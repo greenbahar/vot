@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	one_day         = time.Hour * 24
-	vote_entity_sep = "|"
-	vote_result_sep = "||"
-	Key_val_sep     = "::"
+	one_day          = time.Hour * 24
+	vote_entity_sep  = "|"
+	vote_result_sep  = "||"
+	key_val_sep      = "::"
+	input_option_sep = "//"
 )
 
 type Voter struct{}
@@ -41,6 +42,17 @@ func NewVote(question string, days int, options ...ElectionOption) *Vote {
 		//Options: options,
 		VotingResult: votingResult,
 	}
+}
+
+func ParsOptions(options string) []ElectionOption {
+	electionOption := make([]ElectionOption, 0)
+
+	items := strings.Split(options, input_option_sep)
+	for _, item := range items {
+		electionOption = append(electionOption, ElectionOption{Option: item})
+	}
+
+	return electionOption
 }
 
 func (v *Vote) TimeToVoteIsValid() bool {
@@ -107,7 +119,7 @@ func (v *Vote) String() string {
 
 	for key, val := range v.VotingResult {
 		buf.WriteString(key.Option)
-		buf.WriteString(Key_val_sep)
+		buf.WriteString(key_val_sep)
 		buf.WriteString(strconv.Itoa(val))
 		buf.WriteString(vote_result_sep)
 	}
@@ -129,7 +141,7 @@ func Parse(s string) (*Vote, error) {
 	votingResult := make(map[ElectionOption]int)
 	electionOption := ElectionOption{}
 	for _, item := range strings.Split(parsedData[2], vote_result_sep) {
-		option := strings.Split(item, Key_val_sep)
+		option := strings.Split(item, key_val_sep)
 
 		electionOption = ElectionOption{option[0]}
 		optionCount, err := strconv.Atoi(option[1])
