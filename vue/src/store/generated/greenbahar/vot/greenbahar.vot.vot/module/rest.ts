@@ -9,6 +9,10 @@
  * ---------------------------------------------------------------
  */
 
+export interface StoredVoteVoter {
+  voter?: string;
+}
+
 export interface ProtobufAny {
   "@type"?: string;
 }
@@ -131,6 +135,8 @@ export interface VotQueryParamsResponse {
 export interface VotStoredVote {
   index?: string;
   vote?: string;
+  creator?: string;
+  voters?: StoredVoteVoter[];
 }
 
 export type QueryParamsType = Record<string | number, any>;

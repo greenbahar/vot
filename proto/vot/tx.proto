@@ -15,6 +15,7 @@ message MsgCreateVote {
   string creator = 1;
   string question = 2;
   string options = 3;
+  uint32 days = 4;
 }
 
 message MsgCreateVoteResponse {

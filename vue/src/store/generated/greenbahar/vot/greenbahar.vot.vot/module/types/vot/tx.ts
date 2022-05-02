@@ -7,13 +7,19 @@ export interface MsgCreateVote {
   creator: string;
   question: string;
   options: string;
+  days: number;
 }
 
 export interface MsgCreateVoteResponse {
   idValue: string;
 }
 
-const baseMsgCreateVote: object = { creator: "", question: "", options: "" };
+const baseMsgCreateVote: object = {
+  creator: "",
+  question: "",
+  options: "",
+  days: 0,
+};
 
 export const MsgCreateVote = {
   encode(message: MsgCreateVote, writer: Writer = Writer.create()): Writer {
@@ -25,6 +31,9 @@ export const MsgCreateVote = {
     }
     if (message.options !== "") {
       writer.uint32(26).string(message.options);
+    }
+    if (message.days !== 0) {
+      writer.uint32(32).uint32(message.days);
     }
     return writer;
   },
@@ -44,6 +53,9 @@ export const MsgCreateVote = {
           break;
         case 3:
           message.options = reader.string();
+          break;
+        case 4:
+          message.days = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -70,6 +82,11 @@ export const MsgCreateVote = {
     } else {
       message.options = "";
     }
+    if (object.days !== undefined && object.days !== null) {
+      message.days = Number(object.days);
+    } else {
+      message.days = 0;
+    }
     return message;
   },
 
@@ -78,6 +95,7 @@ export const MsgCreateVote = {
     message.creator !== undefined && (obj.creator = message.creator);
     message.question !== undefined && (obj.question = message.question);
     message.options !== undefined && (obj.options = message.options);
+    message.days !== undefined && (obj.days = message.days);
     return obj;
   },
 
@@ -97,6 +115,11 @@ export const MsgCreateVote = {
       message.options = object.options;
     } else {
       message.options = "";
+    }
+    if (object.days !== undefined && object.days !== null) {
+      message.days = object.days;
+    } else {
+      message.days = 0;
     }
     return message;
   },

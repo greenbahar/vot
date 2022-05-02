@@ -18018,6 +18018,15 @@ paths:
                       type: string
                     vote:
                       type: string
+                    creator:
+                      type: string
+                    voters:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          voter:
+                            type: string
               pagination:
                 type: object
                 properties:
@@ -18139,6 +18148,15 @@ paths:
                     type: string
                   vote:
                     type: string
+                  creator:
+                    type: string
+                  voters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        voter:
+                          type: string
         default:
           description: An unexpected error response.
           schema:
@@ -42966,6 +42984,15 @@ definitions:
               type: string
             vote:
               type: string
+            creator:
+              type: string
+            voters:
+              type: array
+              items:
+                type: object
+                properties:
+                  voter:
+                    type: string
       pagination:
         type: object
         properties:
@@ -43010,6 +43037,15 @@ definitions:
             type: string
           vote:
             type: string
+          creator:
+            type: string
+          voters:
+            type: array
+            items:
+              type: object
+              properties:
+                voter:
+                  type: string
   greenbahar.vot.vot.QueryParamsResponse:
     type: object
     properties:
@@ -43023,6 +43059,20 @@ definitions:
       index:
         type: string
       vote:
+        type: string
+      creator:
+        type: string
+      voters:
+        type: array
+        items:
+          type: object
+          properties:
+            voter:
+              type: string
+  greenbahar.vot.vot.StoredVote.Voter:
+    type: object
+    properties:
+      voter:
         type: string
   ibc.applications.transfer.v1.DenomTrace:
     type: object

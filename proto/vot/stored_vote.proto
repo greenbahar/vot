@@ -4,8 +4,14 @@ package greenbahar.vot.vot;
 option go_package = "github.com/greenbahar/vot/x/vot/types";
 
 message StoredVote {
-  string index = 1; 
-  string vote = 2; 
-  
+  string index = 1;
+  string vote = 2;
+  string creator = 3;
+  repeated Voter voters = 4;
+
+  message Voter {
+    string voter = 1;
+  }
+
 }
 

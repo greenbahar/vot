@@ -3,9 +3,10 @@ import { txClient, queryClient, MissingWalletError , registry} from './module'
 import { NextVote } from "./module/types/vot/next_vote"
 import { Params } from "./module/types/vot/params"
 import { StoredVote } from "./module/types/vot/stored_vote"
+import { StoredVote_Voter } from "./module/types/vot/stored_vote"
 
 
-export { NextVote, Params, StoredVote };
+export { NextVote, Params, StoredVote, StoredVote_Voter };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -52,6 +53,7 @@ const getDefaultState = () => {
 						NextVote: getStructure(NextVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						StoredVote: getStructure(StoredVote.fromPartial({})),
+						StoredVote_Voter: getStructure(StoredVote_Voter.fromPartial({})),
 						
 		},
 		_Registry: registry,

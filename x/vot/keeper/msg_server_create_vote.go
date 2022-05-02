@@ -9,10 +9,6 @@ import (
 	"github.com/greenbahar/vot/x/vot/types"
 )
 
-// TODO add "days" field in the MsgCreateVote. days=in how many days voters can submit their votes.
-
-// TODO add voters and creator address fields
-
 func (k msgServer) CreateVote(goCtx context.Context, msg *types.MsgCreateVote) (*types.MsgCreateVoteResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -23,7 +19,7 @@ func (k msgServer) CreateVote(goCtx context.Context, msg *types.MsgCreateVote) (
 	newIndex := strconv.FormatUint(nextVote.IdValue, 10)
 
 	options := rules.ParsOptions(msg.Options)
-	newVot := rules.NewVote(msg.Question, 30, options...)
+	newVot := rules.NewVote(msg.Question, msg.Days, options...)
 
 	storedVot := types.StoredVote{
 		Index: newIndex,

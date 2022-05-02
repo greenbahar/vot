@@ -30,7 +30,7 @@ type Vote struct {
 	VotingResult map[ElectionOption]int
 }
 
-func NewVote(question string, days int, options ...ElectionOption) *Vote {
+func NewVote(question string, days uint32, options ...ElectionOption) *Vote {
 	votingResult := make(map[ElectionOption]int)
 	for _, item := range options {
 		votingResult[item] = 0
@@ -38,7 +38,7 @@ func NewVote(question string, days int, options ...ElectionOption) *Vote {
 
 	return &Vote{
 		Question:              question,
-		ValidTimeToVoteInDays: GetNowUTC().AddDate(0, 0, days),
+		ValidTimeToVoteInDays: GetNowUTC().AddDate(0, 0, int(days)),
 		//Options: options,
 		VotingResult: votingResult,
 	}
