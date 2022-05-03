@@ -4,9 +4,10 @@ import { NextVote } from "./module/types/vot/next_vote"
 import { Params } from "./module/types/vot/params"
 import { StoredVote } from "./module/types/vot/stored_vote"
 import { StoredVote_Voter } from "./module/types/vot/stored_vote"
+import { MsgSelectVotingOptionResponse_Result } from "./module/types/vot/tx"
 
 
-export { NextVote, Params, StoredVote, StoredVote_Voter };
+export { NextVote, Params, StoredVote, StoredVote_Voter, MsgSelectVotingOptionResponse_Result };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -54,6 +55,7 @@ const getDefaultState = () => {
 						Params: getStructure(Params.fromPartial({})),
 						StoredVote: getStructure(StoredVote.fromPartial({})),
 						StoredVote_Voter: getStructure(StoredVote_Voter.fromPartial({})),
+						MsgSelectVotingOptionResponse_Result: getStructure(MsgSelectVotingOptionResponse_Result.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -232,6 +234,21 @@ export default {
 		},
 		
 		
+		async sendMsgSelectVotingOption({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgSelectVotingOption(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSelectVotingOption:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSelectVotingOption:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateVote({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -248,6 +265,19 @@ export default {
 			}
 		},
 		
+		async MsgSelectVotingOption({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgSelectVotingOption(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSelectVotingOption:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSelectVotingOption:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgCreateVote({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)

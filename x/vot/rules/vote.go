@@ -10,24 +10,28 @@ import (
 )
 
 const (
-	one_day          = time.Hour * 24
 	vote_entity_sep  = "|"
 	vote_result_sep  = "||"
 	key_val_sep      = "::"
 	input_option_sep = "//"
 )
 
-type Voter struct{}
+type Voter string
 
 type ElectionOption struct {
 	Option string
+	code   uint32
+}
+
+type OptionCounter struct {
+	Option  string
+	Counter int
 }
 
 type Vote struct {
 	Question              string
 	ValidTimeToVoteInDays time.Time
-	//Options 				[]ElectionOption
-	VotingResult map[ElectionOption]int
+	VotingResult          map[ElectionOption]int
 }
 
 func NewVote(question string, days uint32, options ...ElectionOption) *Vote {
@@ -39,34 +43,38 @@ func NewVote(question string, days uint32, options ...ElectionOption) *Vote {
 	return &Vote{
 		Question:              question,
 		ValidTimeToVoteInDays: GetNowUTC().AddDate(0, 0, int(days)),
-		//Options: options,
-		VotingResult: votingResult,
+		VotingResult:          votingResult,
 	}
 }
 
 func ParsOptions(options string) []ElectionOption {
-	electionOption := make([]ElectionOption, 0)
+	electionOptions := make([]ElectionOption, 0)
 
 	items := strings.Split(options, input_option_sep)
-	for _, item := range items {
-		electionOption = append(electionOption, ElectionOption{Option: item})
+	for index, item := range items {
+		electionOptions = append(electionOptions, ElectionOption{Option: item, code: uint32(index + 1)})
 	}
 
-	return electionOption
+	return electionOptions
 }
 
 func (v *Vote) TimeToVoteIsValid() bool {
 	return v.ValidTimeToVoteInDays.Sub(GetNowUTC()) > 0
 }
 
-func (v *Vote) VoteFor(option string) {
+func (v *Vote) VoteFor(optionCode uint32) error {
 	if v.TimeToVoteIsValid() {
-		selectedOption := ElectionOption{
-			option,
+		for key := range v.VotingResult {
+			if key.code == optionCode {
+				v.VotingResult[key]++
+				return nil
+			}
 		}
 
-		v.VotingResult[selectedOption]++
+		return errors.New("this code option is not an election option")
 	}
+
+	return errors.New("voting time is expired")
 }
 
 func (v *Vote) WinnerOption() (*ElectionOption, error) {
@@ -98,6 +106,18 @@ func (v *Vote) GetVoteOptions() []ElectionOption {
 	return options
 }
 
+func (v *Vote) GetVoteOptionsWithCounter() []*OptionCounter {
+	var results []*OptionCounter
+	var item *OptionCounter
+	for key, val := range v.VotingResult {
+		item.Option = key.Option
+		item.Counter = val
+		results = append(results, item)
+	}
+
+	return results
+}
+
 func GetNowUTC() time.Time {
 	return time.Now().UTC()
 }
@@ -110,7 +130,7 @@ func ParseTime(t string) (time.Time, error) {
 	return time.Parse(time.RFC1123Z, t)
 }
 
-func (v *Vote) String() string {
+func (v *Vote) String() (string, error) {
 	var buf bytes.Buffer
 	buf.WriteString(v.Question)
 	buf.WriteString(vote_entity_sep)
@@ -120,11 +140,13 @@ func (v *Vote) String() string {
 	for key, val := range v.VotingResult {
 		buf.WriteString(key.Option)
 		buf.WriteString(key_val_sep)
+		buf.WriteString(strconv.Itoa(int(key.code)))
+		buf.WriteString(key_val_sep)
 		buf.WriteString(strconv.Itoa(val))
 		buf.WriteString(vote_result_sep)
 	}
 
-	return buf.String()
+	return buf.String(), nil
 }
 
 func Parse(s string) (*Vote, error) {
@@ -143,8 +165,12 @@ func Parse(s string) (*Vote, error) {
 	for _, item := range strings.Split(parsedData[2], vote_result_sep) {
 		option := strings.Split(item, key_val_sep)
 
-		electionOption = ElectionOption{option[0]}
-		optionCount, err := strconv.Atoi(option[1])
+		optionCode, codeErr := strconv.Atoi(option[1])
+		if codeErr != nil {
+			return nil, errors.New("parse error")
+		}
+		electionOption = ElectionOption{option[0], uint32(optionCode)}
+		optionCount, err := strconv.Atoi(option[2])
 		if err != nil {
 			return nil, errors.New(fmt.Sprintf("invalid vote, invalid metadata: %v", err))
 		}

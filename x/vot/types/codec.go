@@ -9,12 +9,16 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateVote{}, "vot/CreateVote", nil)
+	cdc.RegisterConcrete(&MsgSelectVotingOption{}, "vot/SelectVotingOption", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateVote{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgSelectVotingOption{},
 	)
 	// this line is used by starport scaffolding # 3
 

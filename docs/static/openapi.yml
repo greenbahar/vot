@@ -42963,6 +42963,29 @@ definitions:
     properties:
       idValue:
         type: string
+  greenbahar.vot.vot.MsgSelectVotingOptionResponse:
+    type: object
+    properties:
+      idValue:
+        type: string
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            option:
+              type: string
+            counter:
+              type: string
+              format: int64
+  greenbahar.vot.vot.MsgSelectVotingOptionResponse.Result:
+    type: object
+    properties:
+      option:
+        type: string
+      counter:
+        type: string
+        format: int64
   greenbahar.vot.vot.NextVote:
     type: object
     properties:

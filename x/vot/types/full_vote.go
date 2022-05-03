@@ -10,7 +10,7 @@ import (
 func (sv *StoredVote) ParseVote() (*rules.Vote, error) {
 	vote, errVote := rules.Parse(sv.Vote)
 	if errVote != nil {
-		return nil, sdkerrors.Wrapf(errVote, ErrVoteNotParsable.Error())
+		return nil, sdkerrors.Wrapf(errVote, ErrNotParsable.Error())
 	}
 
 	return vote, nil

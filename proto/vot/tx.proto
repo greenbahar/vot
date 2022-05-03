@@ -8,6 +8,7 @@ option go_package = "github.com/greenbahar/vot/x/vot/types";
 // Msg defines the Msg service.
 service Msg {
       rpc CreateVote(MsgCreateVote) returns (MsgCreateVoteResponse);
+  rpc SelectVotingOption(MsgSelectVotingOption) returns (MsgSelectVotingOptionResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -20,6 +21,22 @@ message MsgCreateVote {
 
 message MsgCreateVoteResponse {
   string idValue = 1;
+}
+
+message MsgSelectVotingOption {
+  string creator = 1;
+  string idValue = 2;
+  uint64 selectedOption = 3;
+}
+
+message MsgSelectVotingOptionResponse {
+  string idValue = 1;
+  repeated Result results = 2;
+
+  message Result {
+    string option = 1;
+    int64 counter =2;
+  }
 }
 
 // this line is used by starport scaffolding # proto/tx/message

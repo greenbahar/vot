@@ -9,6 +9,13 @@
  * ---------------------------------------------------------------
  */
 
+export interface MsgSelectVotingOptionResponseResult {
+  option?: string;
+
+  /** @format int64 */
+  counter?: string;
+}
+
 export interface StoredVoteVoter {
   voter?: string;
 }
@@ -89,6 +96,11 @@ export interface V1Beta1PageResponse {
 
 export interface VotMsgCreateVoteResponse {
   idValue?: string;
+}
+
+export interface VotMsgSelectVotingOptionResponse {
+  idValue?: string;
+  results?: MsgSelectVotingOptionResponseResult[];
 }
 
 export interface VotNextVote {

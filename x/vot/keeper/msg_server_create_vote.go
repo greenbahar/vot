@@ -20,10 +20,15 @@ func (k msgServer) CreateVote(goCtx context.Context, msg *types.MsgCreateVote) (
 
 	options := rules.ParsOptions(msg.Options)
 	newVot := rules.NewVote(msg.Question, msg.Days, options...)
+	newVoteSerialized, err := newVot.String()
+	if err != nil {
+		panic("cannot serialize the Vote object")
+	}
 
 	storedVot := types.StoredVote{
-		Index: newIndex,
-		Vote:  newVot.String(),
+		Index:   newIndex,
+		Vote:    newVoteSerialized,
+		Creator: msg.Creator,
 	}
 
 	k.Keeper.SetStoredVote(ctx, storedVot)
