@@ -23,4 +23,14 @@ func KeyPrefix(p string) []byte {
 
 const (
 	NextVoteKey = "NextVote-value-"
+
+	StoredVoteEventKey     = "NewVoteCreated" // Indicates what key to listen to
+	StoredVoteEventCreator = "Creator"
+	StoredVoteEventIndex   = "Index" // What vote is relevant
+
+	SelectVotingOptionEventKey     = "VotingOptionSelected"
+	SelectVotingOptionCreator      = "Creator"
+	SelectVotingOptionEventIdValue = "IdValue"
+	SelectVotingOptionEventOption  = "Option"
+	SelectVotingOptionEventResult  = "Result"
 )

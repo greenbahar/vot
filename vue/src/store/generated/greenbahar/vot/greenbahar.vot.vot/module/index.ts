@@ -4,13 +4,13 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgSelectVotingOption } from "./types/vot/tx";
 import { MsgCreateVote } from "./types/vot/tx";
+import { MsgSelectVotingOption } from "./types/vot/tx";
 
 
 const types = [
-  ["/greenbahar.vot.vot.MsgSelectVotingOption", MsgSelectVotingOption],
   ["/greenbahar.vot.vot.MsgCreateVote", MsgCreateVote],
+  ["/greenbahar.vot.vot.MsgSelectVotingOption", MsgSelectVotingOption],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -43,8 +43,8 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgSelectVotingOption: (data: MsgSelectVotingOption): EncodeObject => ({ typeUrl: "/greenbahar.vot.vot.MsgSelectVotingOption", value: MsgSelectVotingOption.fromPartial( data ) }),
     msgCreateVote: (data: MsgCreateVote): EncodeObject => ({ typeUrl: "/greenbahar.vot.vot.MsgCreateVote", value: MsgCreateVote.fromPartial( data ) }),
+    msgSelectVotingOption: (data: MsgSelectVotingOption): EncodeObject => ({ typeUrl: "/greenbahar.vot.vot.MsgSelectVotingOption", value: MsgSelectVotingOption.fromPartial( data ) }),
     
   };
 };

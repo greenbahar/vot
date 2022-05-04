@@ -46,6 +46,9 @@ func (k msgServer) SelectVotingOption(goCtx context.Context, msg *types.MsgSelec
 		result.Counter = int64(item.Counter)
 		results = append(results, &result)
 	}
+
+	ctx.EventManager().EmitTypedEvents(msg, &types.MsgSelectVotingOptionResponse{Results: results})
+
 	return &types.MsgSelectVotingOptionResponse{
 		IdValue: msg.IdValue,
 		Results: results,

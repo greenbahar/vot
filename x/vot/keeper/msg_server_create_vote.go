@@ -35,5 +35,12 @@ func (k msgServer) CreateVote(goCtx context.Context, msg *types.MsgCreateVote) (
 	nextVote.IdValue++
 	k.Keeper.SetNextVote(ctx, nextVote)
 
+	// the error isn't handled because the data is set in blockchain. Having error or not we should return the results.
+	// returning this is not correct in golang principles:
+	// &types.MsgCreateVoteResponse{IdValue: newIndex}, err
+	// because in returns in go we either have an error or we return the results. That's the way we decide what to do
+	// with the results
+	ctx.EventManager().EmitTypedEvents(msg, &types.MsgCreateVoteResponse{IdValue: newIndex})
+
 	return &types.MsgCreateVoteResponse{IdValue: newIndex}, nil
 }
