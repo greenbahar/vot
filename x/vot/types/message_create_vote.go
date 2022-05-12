@@ -3,17 +3,23 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"strconv"
 )
 
 const TypeMsgCreateVote = "create_vote"
 
 var _ sdk.Msg = &MsgCreateVote{}
 
-func NewMsgCreateVote(creator string, question string, options string) *MsgCreateVote {
+func NewMsgCreateVote(creator string, question string, options string, days string) *MsgCreateVote {
+	intDays, err := strconv.Atoi(days)
+	if err != nil {
+		panic(err)
+	}
 	return &MsgCreateVote{
 		Creator:  creator,
 		Question: question,
 		Options:  options,
+		Days:     uint32(intDays),
 	}
 }
 
