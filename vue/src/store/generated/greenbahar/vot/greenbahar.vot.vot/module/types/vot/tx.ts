@@ -495,6 +495,7 @@ export const MsgSelectVotingOptionResponse_Result = {
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateVote(request: MsgCreateVote): Promise<MsgCreateVoteResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
   SelectVotingOption(
     request: MsgSelectVotingOption
   ): Promise<MsgSelectVotingOptionResponse>;

@@ -15,7 +15,7 @@ func (k msgServer) SelectVotingOption(goCtx context.Context, msg *types.MsgSelec
 	storedVote, found := k.Keeper.GetStoredVote(ctx, msg.IdValue)
 	if !found {
 		k.Logger(ctx).Error("storedVote object not found", msg.IdValue)
-		return nil, sdkerrors.Wrapf(types.ErrNotFound, "storedVote object not found", msg.IdValue)
+		return nil, sdkerrors.Wrapf(types.ErrNotFound, "storedVote object not found: %v", msg.IdValue)
 	}
 	k.Logger(ctx).Info("this is stored vote: %v", storedVote)
 
@@ -28,7 +28,7 @@ func (k msgServer) SelectVotingOption(goCtx context.Context, msg *types.MsgSelec
 	vote, err := storedVote.ParseVote()
 	if err != nil {
 		k.Logger(ctx).Error("cannot pars storedVote object", msg.IdValue)
-		return nil, sdkerrors.Wrapf(types.ErrNotParsable, "cannot pars storedVote object", msg.IdValue)
+		return nil, sdkerrors.Wrapf(types.ErrNotParsable, "cannot pars storedVote object: %v", msg.IdValue)
 	}
 	k.Logger(ctx).Info("here is the vote object of storedVote: %v", vote)
 

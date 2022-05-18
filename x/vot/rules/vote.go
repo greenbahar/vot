@@ -11,7 +11,7 @@ import (
 
 const (
 	vote_entity_sep  = "|"
-	vote_result_sep  = "||"
+	vote_result_sep  = ";;"
 	key_val_sep      = "::"
 	input_option_sep = "//"
 )
@@ -83,7 +83,7 @@ func (v *Vote) WinnerOption() (*ElectionOption, error) {
 	}
 
 	maxCount := 0
-	var winner *ElectionOption
+	var winner = new(ElectionOption)
 	for option, count := range v.VotingResult {
 		if count > maxCount {
 			maxCount = count
@@ -98,21 +98,21 @@ func (v *Vote) WinnerOption() (*ElectionOption, error) {
 	return winner, nil
 }
 
-func (v *Vote) GetVoteOptions() []ElectionOption {
-	options := make([]ElectionOption, 0)
+func (v *Vote) GetVoteOptions() []*ElectionOption {
+	options := make([]*ElectionOption, 0)
 	for item := range v.VotingResult {
-		options = append(options, item)
+		options = append(options, &item)
 	}
 	return options
 }
 
-func (v *Vote) GetVoteOptionsWithCounter() []*OptionCounter {
-	var results []*OptionCounter
-	var item *OptionCounter
+func (v *Vote) GetVoteOptionsWithCounter() []OptionCounter {
+	var results []OptionCounter
+	var item = new(OptionCounter)
 	for key, val := range v.VotingResult {
 		item.Option = key.Option
 		item.Counter = val
-		results = append(results, item)
+		results = append(results, *item)
 	}
 
 	return results
@@ -130,20 +130,24 @@ func ParseTime(t string) (time.Time, error) {
 	return time.Parse(time.RFC1123Z, t)
 }
 
-func (v *Vote) String() (string, error) {
+func (v Vote) String() (string, error) {
 	var buf bytes.Buffer
 	buf.WriteString(v.Question)
 	buf.WriteString(vote_entity_sep)
 	buf.WriteString(GetTimeFormatString(v.ValidTimeToVoteInDays))
 	buf.WriteString(vote_entity_sep)
 
+	counter := len(v.VotingResult)
 	for key, val := range v.VotingResult {
 		buf.WriteString(key.Option)
 		buf.WriteString(key_val_sep)
 		buf.WriteString(strconv.Itoa(int(key.code)))
 		buf.WriteString(key_val_sep)
 		buf.WriteString(strconv.Itoa(val))
-		buf.WriteString(vote_result_sep)
+		counter--
+		if counter != 0 {
+			buf.WriteString(vote_result_sep)
+		}
 	}
 
 	return buf.String(), nil
@@ -169,7 +173,7 @@ func Parse(s string) (*Vote, error) {
 		if codeErr != nil {
 			return nil, errors.New("parse error")
 		}
-		electionOption = ElectionOption{option[0], uint32(optionCode)}
+		electionOption = ElectionOption{Option: option[0], code: uint32(optionCode)}
 		optionCount, err := strconv.Atoi(option[2])
 		if err != nil {
 			return nil, errors.New(fmt.Sprintf("invalid vote, invalid metadata: %v", err))
